@@ -1,0 +1,12 @@
+*.a
+*.def
+*.lib
+*.exp
+*.exe
+*.dll
+*.obj
+thirdparty/*
+include/*
+goumdf
+log.txt
+goumdf.h
