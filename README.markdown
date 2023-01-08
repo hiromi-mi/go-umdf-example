@@ -10,7 +10,7 @@ Visual C++ に頼らず CGO だけで Windows ドライバーを書けないか�
 
 次に `go build` を実行
 ```
-go build -buildmode=c-shared -o goumdf.dll -ldflags="-v -extldflags '-Wl,--export-all-symbols,-Lthirdparty,-lucrt,-lntdll,-lWdfDriverStubUm,-lntdll -Xlinker --exclude-symbols=_guard_rf_checks_enforced,_guard_icall_checks_enforced,__castguard_slow_path_check_os_handled,__castguard_slow_path_check_nop,__castguard_slow_path_check_fastfail,__castguard_slow_path_check_debugbreak,__castguard_check_failure_os_handled,__castguard_check_failure_nop,__castguard_check_failure_fastfail,__castguard_check_failure_debugbreak,ReadNoFence64,ReadPointerNoFence,_guard_check_icall_nop -Xlinker --script=(このディレクトリのフルパスをエスケープしたもの)\\\\golangs\\\\script.ld
+go build -buildmode=c-shared -o goumdf.dll -ldflags="-v -extldflags '-Wl,--export-all-symbols,-Lthirdparty,-lucrt,-lntdll,-lWdfDriverStubUm,-lntdll -Xlinker --exclude-symbols=_guard_rf_checks_enforced,_guard_icall_checks_enforced,__castguard_slow_path_check_os_handled,__castguard_slow_path_check_nop,__castguard_slow_path_check_fastfail,__castguard_slow_path_check_debugbreak,__castguard_check_failure_os_handled,__castguard_check_failure_nop,__castguard_check_failure_fastfail,__castguard_check_failure_debugbreak,ReadNoFence64,ReadPointerNoFence,_guard_check_icall_nop -Xlinker --script=(このディレクトリのフルパスをエスケープしたもの)\\\\golangs\\\\script.ld'"
 ```
 
 そして これを inf ファイルと同じディレクトリに複製。
