@@ -6,16 +6,19 @@ Visual C++ に頼らず CGO だけで Windows ドライバーを書けないか�
 
 # How to build
 
-`"C:\Program Files (x86)\Windows Kits\10\Lib\wdf\umdf\x64\2.15\WdfDriverStubUm.lib"` を `golangs/thirdparty` に複製する。このファイルは再配布不可
+まず `"C:\Program Files (x86)\Windows Kits\10\Lib\wdf\umdf\x64\2.15\WdfDriverStubUm.lib"` を `golangs/thirdparty` に複製する。このファイルは再配布不可
 
+次に `go build` を実行
 ```
 go build -buildmode=c-shared -o goumdf.dll -ldflags="-v -extldflags '-Wl,--export-all-symbols,-Lthirdparty,-lucrt,-lntdll,-lWdfDriverStubUm,-lntdll -Xlinker --exclude-symbols=_guard_rf_checks_enforced,_guard_icall_checks_enforced,__castguard_slow_path_check_os_handled,__castguard_slow_path_check_nop,__castguard_slow_path_check_fastfail,__castguard_slow_path_check_debugbreak,__castguard_check_failure_os_handled,__castguard_check_failure_nop,__castguard_check_failure_fastfail,__castguard_check_failure_debugbreak,ReadNoFence64,ReadPointerNoFence,_guard_check_icall_nop -Xlinker --script=(このディレクトリのフルパスをエスケープしたもの)\\\\golangs\\\\script.ld
 ```
 
+そして これを inf ファイルと同じディレクトリに複製。
 `cp golangs/goumdf.dll TrueGoUmdf.dll`
 
-事前に Visual Studio などを使い署名を行い、そのsha1を控える
+次に、 Visual Studio などを使い署名用の鍵を作成し、そのsha1を控える
 
+infファイルとdllへの署名を行う。
 ```
 signtool.exe sign /ph /fd "sha256" /sha1 "(当該sha1)" .\TrueGoUmdf.dll
 stampinf -d "*" -a "amd64" -u "2.15.0" -v "*" -f .\TrueGoUmdf.inf
@@ -25,7 +28,7 @@ signtool.exe sign /ph /fd "sha256" /sha1 "(当該sha1)" .\truegoumdf.cat
 
 ターゲットマシンの `C:\DriverTest\Drivers\` に `TrueGoUmdf.{cat,cer,inf,dll}` をコピーし、証明書をターゲットマシンに読み込ませる
 
-ターゲットマシンで以下を実行するとWindowsがクラッシュするので、事前にいくつか設定しておく
+ターゲットマシンで以下を実行するとインストールされるが、このときWindowsがクラッシュする。事前にいくつか設定しておく
 ```
 C:\DriverTest\devcon install C:\DriverTest\Drivers\TrueGoUmdf.inf ROOT\TrueGoUmdf
 ```
