@@ -13,6 +13,7 @@ golangs/goumdf.h
 golangs/_obj
 golangs/export.txt
 golangs/script_default.ld
+golangs/helper.o
 .vs
 obj
 x64
