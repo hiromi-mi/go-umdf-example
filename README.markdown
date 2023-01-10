@@ -1,8 +1,6 @@
 # True Go UMDF Prototype
 
-Visual C++ に頼らず CGO だけで Windows ドライバーを書けないか試みる
-
-注意: 動作しないどころか、導入すると頻繁にWindowsがクラッシュしたりハングアップします。安易に試さないようにしてください
+Visual C++ に頼らず Windows ドライバーを書く
 
 # How to build
 
