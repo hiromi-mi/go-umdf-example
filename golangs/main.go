@@ -11,6 +11,19 @@ package main
 // extern void* WdfFunctions_02015;
 // extern void* WdfDriverGlobals;
 // //extern unsigned long _imp_DbgPrintEx(unsigned long ComponentId, unsigned long Level, void* Format,...) { return 0;}
+///* static void __guard_check_icall_dummy(void) {}
+//__asm__(
+//    "__guard_dispatch_icall_dummy:\n"
+//    "    jmp *%rax\n"
+//);
+// extern void *__guard_dispatch_icall_dummy;
+////  __asm__(".section .00cfg\n");
+// //__attribute__(( section (".data") ))
+// void *__guard_check_icall_fptr2 = &__guard_check_icall_dummy;
+// //__attribute__(( section (".data") ))
+// void *__guard_dispatch_icall_fptr2 = &__guard_dispatch_icall_dummy; */
+// //This is intentionally declared as _not_ a function pointer, so that the
+// //jmp instruction is not included as a valid call target for CFGuard.
 // /*
 //  __declspec(dllexport) void* _guard_check_icall_nop(unsigned long ptr) { return 0;}
 //  __declspec(dllexport) void* __guard_check_icall_fptr(unsigned long ptr) { return 0;}

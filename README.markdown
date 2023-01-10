@@ -8,9 +8,15 @@ Visual C++ に頼らず CGO だけで Windows ドライバーを書けないか�
 
 まず `"C:\Program Files (x86)\Windows Kits\10\Lib\wdf\umdf\x64\2.15\WdfDriverStubUm.lib"` を `golangs/thirdparty` に複製する。このファイルは再配布不可
 
+次に helper script をビルドする。これは Go言語で Control Flow Guard 問題を回避するためのもの
+
+```
+gcc -c helper.c -o helper.o -Wall -Wextra
+```
+
 次に `go build` を実行
 ```
-go build -buildmode=c-shared -o goumdf.dll -ldflags="-v -extldflags '-Wl,--export-all-symbols,-Lthirdparty,-lucrt,-lntdll,-lWdfDriverStubUm,-lntdll -Xlinker --exclude-symbols=_guard_rf_checks_enforced,_guard_icall_checks_enforced,__castguard_slow_path_check_os_handled,__castguard_slow_path_check_nop,__castguard_slow_path_check_fastfail,__castguard_slow_path_check_debugbreak,__castguard_check_failure_os_handled,__castguard_check_failure_nop,__castguard_check_failure_fastfail,__castguard_check_failure_debugbreak,ReadNoFence64,ReadPointerNoFence,_guard_check_icall_nop -Xlinker --script=(このディレクトリのフルパスをエスケープしたもの)\\\\golangs\\\\script.ld'"
+go build -buildmode=c-shared -o goumdf.dll -ldflags="-v -extldflags '-Wl,--export-all-symbols,-Lthirdparty,-lucrt,-lntdll,-lWdfDriverStubUm,-lntdll -Xlinker --exclude-symbols=_guard_rf_checks_enforced,_guard_icall_checks_enforced,__castguard_slow_path_check_os_handled,__castguard_slow_path_check_nop,__castguard_slow_path_check_fastfail,__castguard_slow_path_check_debugbreak,__castguard_check_failure_os_handled,__castguard_check_failure_nop,__castguard_check_failure_fastfail,__castguard_check_failure_debugbreak,ReadNoFence64,ReadPointerNoFence,_guard_check_icall_nop -Xlinker --script=(このディレクトリのフルパスをエスケープしたもの)\\\\golangs\\\\script.ld  -Xlinker (このディレクトリのフルパスをエスケープしたもの)\\\\golangs\\\\helper.o'"
 ```
 
 そして これを inf ファイルと同じディレクトリに複製。
@@ -28,10 +34,13 @@ signtool.exe sign /ph /fd "sha256" /sha1 "(当該sha1)" .\truegoumdf.cat
 
 ターゲットマシンの `C:\DriverTest\Drivers\` に `TrueGoUmdf.{cat,cer,inf,dll}` をコピーし、証明書をターゲットマシンに読み込ませる
 
-ターゲットマシンで以下を実行するとインストールされるが、このときWindowsがクラッシュする。事前にいくつか設定しておく
+ターゲットマシンで以下を実行するとインストールされる、動作する
+
 ```
 C:\DriverTest\devcon install C:\DriverTest\Drivers\TrueGoUmdf.inf ROOT\TrueGoUmdf
 ```
+
+# クラッシュする場合のデバッグ
 
 Target Machine で以下を設定
 - WdfVerifier.exe (Windows Driver Kit + Windows SDK) -> Driverの読み込み時に20秒以上待機するように
