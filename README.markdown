@@ -1,6 +1,6 @@
-# True Go UMDF Prototype
+# Go UMDF Prototype
 
-Visual C++ に頼らず Windows ドライバーを書く
+Go言語を用いて Windows ユーザーモードドライバー (User-mode Driver Framework) を書く例。実用性はない
 
 # How to build
 
@@ -44,5 +44,3 @@ Target Machine で以下を設定
 - WdfVerifier.exe (Windows Driver Kit + Windows SDK) -> Driverの読み込み時に20秒以上待機するように
 - Application Verifier (Windows SDK) から `WUDFHost.exe` を有効化
 - `devcon install` したときに WinDbg Preview (Microsoft Store) で `WUDFHost.exe` にアタッチ
-
-適宜 `g` で WinDbg Preview をすすめていく。すると `FxDriverEntryUmWorker` で callできず停止し無限ループに陥る
